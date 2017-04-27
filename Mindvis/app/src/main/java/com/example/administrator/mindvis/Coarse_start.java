@@ -1,9 +1,13 @@
 package com.example.administrator.mindvis;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,7 +20,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 public class Coarse_start extends AppCompatActivity {
 
-
+ static   int info;
     public static final String SERVER_URL ="http://fame.mindvis.in/api/pod/courses";
     ArrayList<String>arrayname;
     ArrayList<String>arrayimg;
@@ -27,11 +31,19 @@ public class Coarse_start extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coarse_start);
-           arrayname=new ArrayList<>();
-           arrayimg=new ArrayList<>();
-        final CustomGrid adapter = new CustomGrid(Coarse_start.this, arrayname, arrayimg);
-        grid=(GridView)findViewById(R.id.grid_view);
+        arrayname=new ArrayList<>();
+        arrayimg=new ArrayList<>();
 
+        grid=(GridView)findViewById(R.id.grid_view);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+@Override
+public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        Toast.makeText(Coarse_start.this, "" + position, Toast.LENGTH_SHORT).show();
+        info= position;
+        Intent i =new Intent(Coarse_start.this,module.class);
+        startActivity(i);
+        }
+        });
         ShowProgressDialog.showProgressDialog(Coarse_start.this, "Log in");
         LoginService service = new LoginService( new AsyncTaskResponse() {
             @Override
@@ -51,6 +63,7 @@ public class Coarse_start extends AppCompatActivity {
 
                         arrayname.add(name);
                         arrayimg.add(img);
+                        CustomGrid adapter = new CustomGrid(Coarse_start.this, arrayname, arrayimg);
                         grid.setAdapter(adapter);
 
                     }
@@ -103,4 +116,3 @@ public class Coarse_start extends AppCompatActivity {
         }
     }
 }
-

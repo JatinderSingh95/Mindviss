@@ -17,13 +17,13 @@ import java.util.ArrayList;
 public class CustomGrid extends BaseAdapter{
     private Context mContext;
     ImageLoader imageLoader;
-    private final ArrayList<String> web;
-    private final ArrayList<String> Imageid;
+    ArrayList<String>arrayname;
+    ArrayList<String>arrayimg;
 
-    public CustomGrid(Context c, ArrayList<String> web, ArrayList<String> Imageid ) {
+    public CustomGrid(Context c, ArrayList<String> arrayname, ArrayList<String> arrayimg) {
         mContext = c;
-        this.Imageid = Imageid;
-        this.web = web;
+        this.arrayimg = arrayimg;
+        this.arrayname = arrayname;
         imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(mContext));
     }
@@ -31,48 +31,61 @@ public class CustomGrid extends BaseAdapter{
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return web.size();
+        return arrayimg.size();
     }
 
     @Override
     public Object getItem(int position) {
         // TODO Auto-generated method stub
-        return null;
+        return arrayimg.get(position);
     }
 
     @Override
     public long getItemId(int position) {
         // TODO Auto-generated method stub
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-        View grid;
+        ViewHolder holder;
+      //  View grid;
         LayoutInflater inflater = (LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (convertView == null) {
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .showImageOnLoading(R.drawable.mindvis)
-                    .cacheInMemory(true)
-                    .cacheOnDisc(true)
-                    .build();
-            grid = new View(mContext);
-            grid = inflater.inflate(R.layout.custom_grid, null);
 
-            TextView textView = (TextView) grid.findViewById(R.id.txtname);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.img_c);
-            imageLoader.displayImage(Imageid.get(position), imageView, options);
-            textView.setText(web.get(position));
-//            Picasso.with(mContext)
-//                    .load(String.valueOf(Imageid))
-//                    .into(imageView);
+
+            //grid = new View(mContext);
+           // grid = inflater.inflate(R.layout.custom_grid, null);
+            convertView = inflater.inflate(R.layout.custom_grid, null);
+            holder = new ViewHolder();
+            holder. textview = (TextView) convertView.findViewById(R.id.txtname);
+            holder. imageView = (ImageView)convertView.findViewById(R.id.img_c);
+
+            convertView.setTag(holder);
+
         } else {
-            grid = (View) convertView;
+            holder = (ViewHolder) convertView.getTag();
         }
+        imageLoader.displayImage(arrayimg.get(position), holder.imageView);
+        holder.textview.setText(arrayname.get(position));
 
-        return grid;
+        return convertView;
     }
+
+    static class ViewHolder {
+        TextView textview;
+        ImageView imageView;
+    }
+
 }
+//
+//        } else {
+//            grid = (View) convertView;
+//        }
+//
+//        return grid;
+//    }
+//}
